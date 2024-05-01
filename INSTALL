@@ -1,0 +1,67 @@
+STEPS TO INSTALL THE UVMULTIFIT PACKAGE:
+
+
+0.- Install dependencies (i.e., GNU Scientific Library, so far).
+
+
+  -- For Linux (Ubuntu-like), in a terminal:
+
+       sudo apt-get install libgsl2   
+    OR  
+       sudo apt-get install libgsl-dev
+    OR 
+       sudo apt-get install libgsl0ldbl
+    
+
+  -- For Mac OS, in a terminal:
+
+      COMMAND 1:  sudo port install gsl
+
+      COMMAND 2:  export LIBRARY_PATH="/opt/local/lib"
+
+      COMMAND 3:  export LD_LIBRARY_PATH="/opt/local/lib"
+
+
+      (and either run the setup script from that terminal or 
+       update your LIBRARY_PATHs in your configuration).
+
+
+
+1.- Compile the C++ module. Just run:
+
+    rm *.so
+    $CASABASE/bin/python3 setup.py build_ext --inplace
+    
+    After this step, a file with "_uvmultimodel.so" in its name
+    should have been created.
+
+2.- Copy the "uvmultifit.py" and "_uvmultimodel.so" files into 
+    a destination directory. 
+    The name of this directory could be, e.g.
+
+    UVMULTIFIT_PATH = $HOME/.casa/Nordic_Tools/uvfit
+
+3.- Import the module into CASA. You can do this automatically 
+    when starting CASA by adding an init.py script here:
+
+     ~/.casa/ipython/profile_default/startup
+    
+    To import the module from the init file, add the following 
+    lines to that script:
+
+      import importlib as imp
+      import sys
+      UVMULTIFIT_PATH = PATH_TO_UVMULTIFIT_CODE
+      sys.path.append(UVMULTIFIT_PATH)
+      uvm = imp.import_module('uvmultifit', UVMULTIFIT_PATH+'/uvmultifit.py')
+
+    From now on, you can access UVMultiFit via the module nichname "uvm".
+
+4.- ENJOY!
+
+
+Any feedback and bug report should be sent either to the ARC 
+Nordic Node (contact@nordic-alma.se) or to the source maintainer
+(i.marti-vidal@uv.es).
+
+
