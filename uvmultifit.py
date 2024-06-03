@@ -2377,7 +2377,8 @@ A previous successful run of function ``checkInputs()`` is assumed.
 # All the other mss will be assumed to have the same frequencies:
       if True:
         tb.open(os.path.join(msname,'SPECTRAL_WINDOW'))
-        origfreqs = tb.getcol('CHAN_FREQ')[:,sp]
+     #   origfreqs = tb.getcol('CHAN_FREQ')[:,sp]
+        origfreqs = tb.getcell('CHAN_FREQ',sp)
         self.averfreqs[si] = np.array([np.average(origfreqs[r]) for r in rang])
         nfreq = len(rang)
         tb.close() 
@@ -2656,12 +2657,12 @@ A previous successful run of function ``checkInputs()`` is assumed.
 # Concatenate all the scans in one single array. Notice that we separate real and imag and save them 
 # as floats. This is because ctypes doesn' t handle complex128.
 
-   self.averdata[si] = np.require(np.concatenate(np.array(datascanAv),axis=0),requirements=['C','A'])  #,np.concatenate(datascanim,axis=0)]
+   self.averdata[si] = np.require(np.concatenate(datascanAv,axis=0),requirements=['C','A'])  #,np.concatenate(datascanim,axis=0)]
 
    if self.takeModel:
-     self.avermod[si] = np.require(np.concatenate(np.array(modelscanAv),axis=0),requirements=['C','A']) 
+     self.avermod[si] = np.require(np.concatenate(modelscanAv,axis=0),requirements=['C','A']) 
 
-   self.averweights[si] = np.require(np.concatenate(np.array(weightscan),axis=0),requirements=['C','A'])
+   self.averweights[si] = np.require(np.concatenate(weightscan,axis=0),requirements=['C','A'])
    self.u[si] = np.require(np.concatenate(uscan,axis=0),requirements=['C','A'])
    self.v[si] = np.require(np.concatenate(vscan,axis=0),requirements=['C','A'])
    self.w[si] = np.require(np.concatenate(wscan,axis=0),requirements=['C','A'])
@@ -3472,7 +3473,7 @@ Parameters
 
   if not self.OneFitPerChannel:
     formatting = "%.12e   " + "% .4e "*(2*npars)+"   %.4e \n"
-    toprint = tuple([np.average(self.averfreqs)] + prtpars + [ChiSq])
+    toprint = tuple([np.average(np.concatenate(self.averfreqs))] + prtpars + [ChiSq])
     outf.write(formatting % toprint)
 
   else:
